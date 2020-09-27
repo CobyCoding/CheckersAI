@@ -66,6 +66,9 @@ class Game:
             return True
         
         return False
+    
+    def winner(self):
+        return self.board.winner()
 
     def _move(self, row, col):
         """This function will check whether a move is valid if so make the move

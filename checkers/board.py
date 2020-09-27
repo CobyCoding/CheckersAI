@@ -44,16 +44,28 @@ class Board:
 
         piece.move(row, col)
 
-        if row == ROWS or row == 0:
+        if row == ROWS - 1 or row == 0:
             piece.make_king() # Make a piece a king
             if piece.color == WHITE:
                 self.white_kings += 1
             else:
                 self.red_kings += 1
-
     def remove(self, pieces):
         for piece in pieces:
             self.board[piece.row][piece.col] = 0
+            if piece != 0:
+                if piece.color == RED:
+                    self.red_left -= 1
+                else:
+                    self.white_left -= 1
+
+    def winner(self):
+        if self.white_left == 0:
+            return RED
+        elif self.red_left == 0:
+            return WHITE
+        else:
+            return None
 
     def draw_squares(self, win):
         """A function that will draw the background of the board

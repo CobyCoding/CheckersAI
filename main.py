@@ -32,10 +32,10 @@ def main():
     clock = pygame.time.Clock() # The fps speed of the game
     game = Game(WIN)
 
-    # board.move(board.get_piece(1, 0), 5, 5)
-    
     while run:
         clock.tick(FPS)
+        if game.winner() != None:
+            print(f"{game.winner()} has won!!!")
         # The pygame event handler
 
         for event in pygame.event.get():
