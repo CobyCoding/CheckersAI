@@ -99,7 +99,105 @@ class Board:
         right = piece.col + 1 # Right column
         row = piece.row
 
+        if piece.color == RED or piece.king:
+            moves.update(self._traverse_left(row -1, max(row - 3, -1), -1, piece.color, left))
+            moves.update(self._traverse_right(row -1, max(row - 3, -1), -1, piece.color, right))
+
+        if piece.color == WHITE or piece.king:
+            moves.update(self._traverse_left(row +1, min(row -+3, ROWS), 1, piece.color, left))
+            moves.update(self._traverse_right(row +1, min(row + 3, ROWS), 1, piece.color, right))
         
+        return moves
+    
+    def _traverse_left(self, start, stop, step, color, left, skipped=[]):
+        """This function is used to simulate traversing left
+
+        Args:
+            start (int): The row to start on
+            stop (int): How far are we going to look in one direction
+            step (int): Move up or down
+            color (rgb): The color of the piece that we are traversing left from
+            left (int): The column index to the left of the piece
+            skipped (list, optional): Defaults to [].
+        """
+        moves = {}
+        last = []
+        for r in range(start, stop, step):
+            if left < 0: # If looking outside the board
+                break
+            
+            current = self.board.get_piece(r, left)
+            if current == 0: # If current piece we are looking at is empty
+                if skipped and not last: # And we skipped a piece
+                    break
+                elif skipped:
+                    moves[(r, left)] = last + skipped # If double jump
+                else:
+                    moves[(r, left)] = last
+                
+                if last: # And the last thing we looked at was a piece
+                    if step == -1: # Up
+                        row = max(r-3, 0)
+                    else: # Down
+                        row = min(r+r, ROWS)
+                    
+                    moves.update(self._traverse_left(r+step, row, step, color, left-1, skipped=last))
+                    moves.update(self._traverse_right(r+step, row, step, color, left+1, skipped=last))
+                    break
+                
+            elif current.color == color: # If it has a color and it is the passed in color
+                break
+            else:
+                last = [current] # If enemy color. Meaning we could move over it if the next square is empty
+
+            left -= 1
+        
+        return moves
+    
+    def _traverse_right(self, start, stop, step, color, right, skipped=[]):
+        """This function is used to simulate traversing left
+
+        Args:
+            start (int): The row to start on
+            stop (int): How far are we going to look in one direction
+            step (int): Move up or down
+            color (rgb): The color of the piece that we are traversing left from
+            left (int): The column index to the left of the piece
+            skipped (list, optional): Defaults to [].
+        """
+        moves = {}
+        last = []
+        for r in range(start, stop, step):
+            if right < COLS: # If looking outside the board
+                break
+            
+            current = self.board.get_piece(r, right)
+            if current == 0: # If current piece we are looking at is empty
+                if skipped and not last: # And we skipped a piece
+                    break
+                elif skipped:
+                    moves[(r, right)] = last + skipped # If double jump
+                else:
+                    moves[(r, right)] = last
+                
+                if last: # And the last thing we looked at was a piece
+                    if step == -1: # Up
+                        row = max(r-3, 0)
+                    else: # Down
+                        row = min(r+r, ROWS)
+                    
+                    moves.update(self._traverse_left(r+step, row, step, color, right-1, skipped=last))
+                    moves.update(self._traverse_right(r+step, row, step, color, right+1, skipped=last))
+                    break
+                
+            elif current.color == color: # If it has a color and it is the passed in color
+                break
+            else:
+                last = [current] # If enemy color. Meaning we could move over it if the next square is empty
+
+            right += 1
+        
+        return moves
 
 
 if __name__ == "__main__":
