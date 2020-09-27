@@ -1,6 +1,6 @@
 # Imports
 import pygame
-from checkers.constants import WIDTH, HEIGHT, FPS, SQUARE_SIZE
+from checkers.constants import WIDTH, HEIGHT, FPS, SQUARE_SIZE, RED
 from checkers.game import Game
 
 # Initialize
@@ -45,8 +45,8 @@ def main():
             if event.type == pygame.MOUSEBUTTONDOWN: # If any button on mouse pressed down
                 pos = pygame.mouse.get_pos()
                 row, col = row_col_from_mouse(pos)
-                piece = board.get_piece(row, col)
-                board.move(piece, 4, 3)
+
+                game.select(row, col)
         
         game.update()
     

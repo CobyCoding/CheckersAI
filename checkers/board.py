@@ -51,6 +51,10 @@ class Board:
             else:
                 self.red_kings += 1
 
+    def remove(self, pieces):
+        for piece in pieces:
+            self.board[piece.row][piece.col] = 0
+
     def draw_squares(self, win):
         """A function that will draw the background of the board
 
@@ -78,7 +82,7 @@ class Board:
                         self.board[row].append(0)
                 else:
                     self.board[row].append(0)
-    
+
     def draw(self, win):
         """This function will draw the board
 
@@ -123,32 +127,31 @@ class Board:
         moves = {}
         last = []
         for r in range(start, stop, step):
-            if left < 0: # If looking outside the board
+            if left < 0:
                 break
             
-            current = self.board.get_piece(r, left)
-            if current == 0: # If current piece we are looking at is empty
-                if skipped and not last: # And we skipped a piece
+            current = self.board[r][left]
+            if current == 0:
+                if skipped and not last:
                     break
                 elif skipped:
-                    moves[(r, left)] = last + skipped # If double jump
+                    moves[(r, left)] = last + skipped
                 else:
                     moves[(r, left)] = last
                 
-                if last: # And the last thing we looked at was a piece
-                    if step == -1: # Up
+                if last:
+                    if step == -1:
                         row = max(r-3, 0)
-                    else: # Down
-                        row = min(r+r, ROWS)
-                    
-                    moves.update(self._traverse_left(r+step, row, step, color, left-1, skipped=last))
-                    moves.update(self._traverse_right(r+step, row, step, color, left+1, skipped=last))
-                    break
-                
-            elif current.color == color: # If it has a color and it is the passed in color
+                    else:
+                        row = min(r+3, ROWS)
+
+                    moves.update(self._traverse_left(r+step, row, step, color, left-1,skipped=last))
+                    moves.update(self._traverse_right(r+step, row, step, color, left+1,skipped=last))
+                break
+            elif current.color == color:
                 break
             else:
-                last = [current] # If enemy color. Meaning we could move over it if the next square is empty
+                last = [current]
 
             left -= 1
         
@@ -168,32 +171,30 @@ class Board:
         moves = {}
         last = []
         for r in range(start, stop, step):
-            if right < COLS: # If looking outside the board
+            if right >= COLS:
                 break
             
-            current = self.board.get_piece(r, right)
-            if current == 0: # If current piece we are looking at is empty
-                if skipped and not last: # And we skipped a piece
+            current = self.board[r][right]
+            if current == 0:
+                if skipped and not last:
                     break
                 elif skipped:
-                    moves[(r, right)] = last + skipped # If double jump
+                    moves[(r,right)] = last + skipped
                 else:
                     moves[(r, right)] = last
                 
-                if last: # And the last thing we looked at was a piece
-                    if step == -1: # Up
+                if last:
+                    if step == -1:
                         row = max(r-3, 0)
-                    else: # Down
-                        row = min(r+r, ROWS)
-                    
-                    moves.update(self._traverse_left(r+step, row, step, color, right-1, skipped=last))
-                    moves.update(self._traverse_right(r+step, row, step, color, right+1, skipped=last))
-                    break
-                
-            elif current.color == color: # If it has a color and it is the passed in color
+                    else:
+                        row = min(r+3, ROWS)
+                    moves.update(self._traverse_left(r+step, row, step, color, right-1,skipped=last))
+                    moves.update(self._traverse_right(r+step, row, step, color, right+1,skipped=last))
+                break
+            elif current.color == color:
                 break
             else:
-                last = [current] # If enemy color. Meaning we could move over it if the next square is empty
+                last = [current]
 
             right += 1
         
