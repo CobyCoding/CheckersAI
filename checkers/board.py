@@ -11,7 +11,6 @@ class Board:
     """
     def __init__(self):
         self.board = [] # A 2d list storing a representation of the board
-        self.selected_piece = None # The piece the user has selected
         self.red_left = self.white_left = 12 # How many of each teams pieces are still on the board
         self.red_kings = self.white_kings = 0
         self.create_board()
@@ -92,6 +91,16 @@ class Board:
                 piece = self.board[row][col]
                 if piece != 0:
                     piece.draw(win)
+    
+    def get_valid_moves(self, piece):
+        moves = {} # Store the current position as the key eg: (4, 5) then a list of its possible moves eg: [(5, 6), (3, 4)]
+
+        left = piece.col - 1 # Left column
+        right = piece.col + 1 # Right column
+        row = piece.row
+
+        
+
 
 if __name__ == "__main__":
     pass

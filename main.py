@@ -1,7 +1,7 @@
 # Imports
 import pygame
 from checkers.constants import WIDTH, HEIGHT, FPS, SQUARE_SIZE
-from checkers.board import Board
+from checkers.game import Game
 
 # Initialize
 pygame.init()
@@ -30,7 +30,7 @@ def main():
     
     run = True # If you want the game to run
     clock = pygame.time.Clock() # The fps speed of the game
-    board = Board() # Checkers/checkers/board.py
+    game = Game(WIN)
 
     # board.move(board.get_piece(1, 0), 5, 5)
     
@@ -48,8 +48,7 @@ def main():
                 piece = board.get_piece(row, col)
                 board.move(piece, 4, 3)
         
-        board.draw(WIN)
-        pygame.display.update() # Update pygame display so newly drawn board shows up
+        game.update()
     
     pygame.quit()
 
